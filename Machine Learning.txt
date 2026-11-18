@@ -1,0 +1,313 @@
+1. Linear Regression
+Problem: Predict a student's exam score based on study hours.
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+
+# Create dataset
+data = {
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "score": [35, 40, 50, 55, 65, 70, 80, 85, 90, 95]
+}
+
+df = pd.DataFrame(data)
+
+print("Dataset:")
+print(df)
+
+# Visualize dataset
+plt.scatter(df["hours"], df["score"])
+plt.xlabel("Study Hours")
+plt.ylabel("Exam Score")
+plt.show()
+
+# Separate input and target
+X = df[["hours"]]
+y = df["score"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Create model
+model = LinearRegression()
+
+# Train model
+model.fit(X_train, y_train)
+
+# Display slope and intercept
+print("Slope:", model.coef_[0])
+print("Intercept:", model.intercept_)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+print("Actual Values:", list(y_test))
+print("Predicted Values:", predictions)
+
+# Evaluate model
+mae = mean_absolute_error(y_test, predictions)
+print("Mean Absolute Error:", mae)
+
+# Predict new value
+new_prediction = model.predict(pd.DataFrame({"hours": [7.5]}))
+print("Prediction for 7.5 hours:", new_prediction[0])
+
+2. Logistic Regression
+Problem: Predict whether a student passes (1) or fails (0) based on study hours.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create dataset
+df = pd.DataFrame({
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+})
+
+print(df)
+
+# Separate input and target
+X = df[["hours"]]
+y = df["pass"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# Create model
+model = LogisticRegression()
+
+# Train model
+model.fit(X_train, y_train)
+
+# Make predictions
+pred = model.predict(X_test)
+prob = model.predict_proba(X_test)
+
+print("Predicted Classes:", pred)
+print("Probabilities:", prob)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, pred))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, pred))
+
+3. K-Nearest Neighbors (KNN)
+Problem: Classify students based on their study hours.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create dataset
+df = pd.DataFrame({
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+})
+
+# Separate input and target
+X = df[["hours"]]
+y = df["pass"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# Scale data
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Create KNN model
+model = KNeighborsClassifier(n_neighbors=3)
+
+# Train model
+model.fit(X_train, y_train)
+
+# Make predictions
+pred = model.predict(X_test)
+
+print("Predicted Values:", pred)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, pred))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, pred))
+
+4. Decision Tree
+Problem: Predict whether a student passes or fails.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create dataset
+df = pd.DataFrame({
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+})
+
+# Separate input and target
+X = df[["hours"]]
+y = df["pass"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# Create Decision Tree model
+model = DecisionTreeClassifier(max_depth=3, random_state=42)
+
+# Train model
+model.fit(X_train, y_train)
+
+# Make predictions
+prediction = model.predict(X_test)
+
+print("Predicted Values:", prediction)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, prediction))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, prediction))
+
+5. Random Forest
+Problem: Predict whether a student passes or fails using multiple decision trees
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create dataset
+df = pd.DataFrame({
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+})
+
+# Separate input and target
+X = df[["hours"]]
+y = df["pass"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# Create Random Forest model
+model = RandomForestClassifier(
+    n_estimators=100,
+    max_depth=5,
+    random_state=42
+)
+
+# Train model
+model.fit(X_train, y_train)
+
+# Make predictions
+prediction = model.predict(X_test)
+
+print("Predicted Values:", prediction)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, prediction))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, prediction))
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create dataset
+df = pd.DataFrame({
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+})
+
+# Separate input and target
+X = df[["hours"]]
+y = df["pass"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# Create Random Forest model
+model = RandomForestClassifier(
+    n_estimators=100,
+    max_depth=5,
+    random_state=42
+)
+
+# Train model
+model.fit(X_train, y_train)
+
+# Make predictions
+prediction = model.predict(X_test)
+
+print("Predicted Values:", prediction)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, prediction))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, prediction))
+
+6. Support Vector Machine (SVM)
+Problem: Classify whether a student passes or fails.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create dataset
+df = pd.DataFrame({
+    "hours": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "pass": [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+})
+
+# Separate input and target
+X = df[["hours"]]
+y = df["pass"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# Scale data
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Create SVM model
+model = SVC(kernel="linear")
+
+# Train model
+model.fit(X_train, y_train)
+
+# Make predictions
+prediction = model.predict(X_test)
+
+print("Predicted Values:", prediction)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, prediction))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, prediction))

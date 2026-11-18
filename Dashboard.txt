@@ -1,0 +1,34 @@
+SUM	SUM(Orders[NetSales])	Adds numeric values.
+AVERAGE	AVERAGE(Orders[NetSales])   Arithmetic average.
+MIN	MIN(Products[SellingPrice])	Smallest value.
+MAX	MAX(Products[SellingPrice])	Largest value.
+COUNT	COUNT(Orders[Quantity])	Counts non-blank numeric values.
+COUNTA	COUNTA(Products[ProductName])	Counts non-blank values.
+COUNTROWS	COUNTROWS(Orders)	Counts rows in a table.
+DISTINCTCOUNT	DISTINCTCOUNT(Orders[CustomerID])Counts unique values.
+DISTINCTCOUNTNOBLANK	DISTINCTCOUNTNOBLANK(Orders[CustomerID])	Unique values excluding blank.
+
+
+First KPI Measures
+Total Sales =
+SUM ( Orders[NetSales] )
+
+Total Orders =
+DISTINCTCOUNT ( Orders[OrderID] )
+
+Total Order Lines =
+COUNTROWS ( Orders )
+
+Total Quantity =
+SUM ( Orders[Quantity] )
+
+Total Customers =
+DISTINCTCOUNT ( Orders[CustomerID] )
+
+Total Products =
+DISTINCTCOUNT ( Products[ProductID] )
+
+Average Selling Price =
+AVERAGE ( Products[SellingPrice] )
+
+

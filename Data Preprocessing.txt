@@ -1,0 +1,321 @@
+
+import pandas as pd
+import numpy as np
+
+# -----------------------------------------
+# 1. CREATE DATASET
+# -----------------------------------------
+
+data = {
+    'EmpID': [101, 102, 103, 104, 105, 106, 107, 108, 109, 101],
+    'Name': [' Rahul ', 'Priya', 'Amit', 'Neha', 'Raj',
+             'Kiran', 'Meena', 'Jay', 'Ravi', ' Rahul '],
+    'Department': ['IT', 'HR', 'IT', 'HR', 'Sales',
+                   'IT', 'Sales', 'HR', 'IT', 'IT'],
+    'Age': [25, 30, 28, np.nan, 35, 250, 26, 32, 29, 25],
+    'Salary': [30000, 40000, 35000, 45000, np.nan,
+               -500, 38000, 42000, 32000, 30000],
+    'JoiningDate': ['2022-01-10', '2021-05-15',
+                    '2023-03-20', '2020-07-12',
+                    '2022-09-01', '2021-11-10',
+                    '2023-01-05', '2020-02-18',
+                    '2022-06-25', '2022-01-10']
+}
+
+df = pd.DataFrame(data)
+
+print("Original Dataset:")
+print(df)
+
+
+# -----------------------------------------
+# 2. DISPLAY FIRST AND LAST RECORDS
+# -----------------------------------------
+
+print("\nFirst 5 Records:")
+print(df.head())
+
+print("\nLast 5 Records:")
+print(df.tail())
+
+
+# -----------------------------------------
+# 3. DATASET DIMENSIONS, STRUCTURE AND TYPES
+# -----------------------------------------
+
+print("\nDataset Dimensions:")
+print(df.shape)
+
+print("\nDataset Information:")
+df.info()
+
+print("\nData Types:")
+print(df.dtypes)
+
+
+# -----------------------------------------
+# 4. DESCRIPTIVE STATISTICS
+# -----------------------------------------
+
+print("\nDescriptive Statistics:")
+print(df.describe())
+
+
+# -----------------------------------------
+# 5. MISSING VALUE IDENTIFICATION
+# -----------------------------------------
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+
+# -----------------------------------------
+# 6. MISSING VALUE HANDLING
+# -----------------------------------------
+
+df['Age'] = df['Age'].fillna(df['Age'].median())
+
+df['Salary'] = df['Salary'].fillna(df['Salary'].median())
+
+print("\nAfter Handling Missing Values:")
+print(df)
+
+
+# -----------------------------------------
+# 7. DUPLICATE IDENTIFICATION AND REMOVAL
+# -----------------------------------------
+
+print("\nDuplicate Records:")
+print(df[df.duplicated()])
+
+df = df.drop_duplicates()
+
+print("\nAfter Removing Duplicates:")
+print(df)
+
+
+# -----------------------------------------
+# 8. DATA FILTERING USING CONDITIONS
+# -----------------------------------------
+
+print("\nEmployees with Age Greater Than 28:")
+print(df[df['Age'] > 28])
+
+print("\nEmployees with Salary Greater Than 30000:")
+print(df[df['Salary'] > 30000])
+
+print("\nEmployees from IT Department:")
+print(df[df['Department'] == 'IT'])
+
+
+# -----------------------------------------
+# 9. SORTING AND TOP RECORDS
+# -----------------------------------------
+
+df = df.sort_values(by='Salary', ascending=False)
+
+print("\nSorted Dataset:")
+print(df)
+
+print("\nTop 3 Employees:")
+print(df.head(3))
+
+
+# -----------------------------------------
+# 10. UNIQUE AND DISTINCT VALUES
+# -----------------------------------------
+
+print("\nUnique Departments:")
+print(df['Department'].unique())
+
+print("\nNumber of Unique Departments:")
+print(df['Department'].nunique())
+
+print("\nDepartment Counts:")
+print(df['Department'].value_counts())
+
+
+# -----------------------------------------
+# 11. COLUMN SELECTION AND RENAMING
+# -----------------------------------------
+
+print("\nSelected Columns:")
+print(df[['Name', 'Age', 'Salary']])
+
+df = df.rename(columns={
+    'Name': 'EmployeeName',
+    'Salary': 'MonthlySalary'
+})
+
+print("\nAfter Renaming Columns:")
+print(df)
+
+
+# -----------------------------------------
+# 12. TEXT CLEANING AND STANDARDIZATION
+# -----------------------------------------
+
+df['EmployeeName'] = df['EmployeeName'].str.strip()
+
+df['EmployeeName'] = df['EmployeeName'].str.title()
+
+df['Department'] = df['Department'].str.strip().str.upper()
+
+print("\nAfter Text Cleaning:")
+print(df)
+
+
+# -----------------------------------------
+# 13. INVALID AND ABNORMAL VALUE IDENTIFICATION
+# -----------------------------------------
+
+print("\nInvalid Age Records:")
+print(df[(df['Age'] < 18) | (df['Age'] > 60)])
+
+print("\nInvalid Salary Records:")
+print(df[df['MonthlySalary'] < 0])
+
+# Replace invalid values with NaN
+
+df.loc[(df['Age'] < 18) | (df['Age'] > 60), 'Age'] = np.nan
+
+df.loc[df['MonthlySalary'] < 0, 'MonthlySalary'] = np.nan
+
+# Handle invalid values
+
+df['Age'] = df['Age'].fillna(df['Age'].median())
+
+df['MonthlySalary'] = df['MonthlySalary'].fillna(
+    df['MonthlySalary'].median()
+)
+
+print("\nAfter Handling Invalid Values:")
+print(df)
+
+
+# -----------------------------------------
+# 14. DATE CONVERSION AND YEAR EXTRACTION
+# -----------------------------------------
+
+df['JoiningDate'] = pd.to_datetime(
+    df['JoiningDate'],
+    errors='coerce'
+)
+
+df['JoiningYear'] = df['JoiningDate'].dt.year
+
+print("\nDate Conversion and Year Extraction:")
+print(df[['EmployeeName', 'JoiningDate', 'JoiningYear']])
+
+
+# -----------------------------------------
+# 15. CREATING CALCULATED COLUMNS
+# -----------------------------------------
+
+df['AnnualSalary'] = df['MonthlySalary'] * 12
+
+df['Bonus'] = df['MonthlySalary'] * 0.10
+
+print("\nCalculated Columns:")
+print(df[['EmployeeName', 'MonthlySalary',
+          'AnnualSalary', 'Bonus']])
+
+
+# -----------------------------------------
+# 16. MATHEMATICAL CALCULATIONS AND DERIVED VALUES
+# -----------------------------------------
+
+salary_array = np.array(df['MonthlySalary'])
+
+print("\nSalary Calculations:")
+
+print("Total Salary:", np.sum(salary_array))
+
+print("Average Salary:", np.mean(salary_array))
+
+print("Maximum Salary:", np.max(salary_array))
+
+print("Minimum Salary:", np.min(salary_array))
+
+print("Standard Deviation:", np.std(salary_array))
+
+df['SalaryAfterBonus'] = df['MonthlySalary'] + df['Bonus']
+
+print("\nSalary After Bonus:")
+print(df[['EmployeeName', 'SalaryAfterBonus']])
+
+
+# -----------------------------------------
+# 17. GROUPING AND AGGREGATION
+# -----------------------------------------
+
+print("\nAverage Salary Department Wise:")
+
+grouped_data = df.groupby('Department')['MonthlySalary'].mean()
+
+print(grouped_data)
+
+print("\nTotal Salary Department Wise:")
+
+total_salary = df.groupby('Department')['MonthlySalary'].sum()
+
+print(total_salary)
+
+print("\nDepartment Summary:")
+
+summary = df.groupby('Department').agg({
+    'MonthlySalary': ['sum', 'mean', 'max'],
+    'Age': 'mean'
+})
+
+print(summary)
+
+
+# -----------------------------------------
+# 18. DATASET MERGING USING COMMON KEYS
+# -----------------------------------------
+
+department_data = {
+    'Department': ['IT', 'HR', 'SALES'],
+    'Manager': ['Amit Shah', 'Neha Patel', 'Raj Mehta']
+}
+
+df2 = pd.DataFrame(department_data)
+
+merged_df = pd.merge(df, df2, on='Department')
+
+print("\nMerged Dataset:")
+print(merged_df)
+
+
+# -----------------------------------------
+# 19. SPLITTING AND RECOMBINING DATASETS
+# -----------------------------------------
+
+# Split dataset into two parts
+
+df1 = df.iloc[:4]
+
+df2 = df.iloc[4:]
+
+print("\nFirst Split:")
+print(df1)
+
+print("\nSecond Split:")
+print(df2)
+
+# Recombine datasets
+
+combined_df = pd.concat([df1, df2], ignore_index=True)
+
+print("\nRecombined Dataset:")
+print(combined_df)
+
+
+# -----------------------------------------
+# 20. EXPORTING PROCESSED DATA TO CSV
+# -----------------------------------------
+
+df.to_csv('processed_employee_data.csv', index=False)
+
+print("\nProcessed Dataset Exported Successfully!")
